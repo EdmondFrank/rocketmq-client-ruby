@@ -56,3 +56,5 @@ end # module Rocketmq
 require File.join(Rocketmq::LIBPATH, "rocketmq-client-ruby", "rocketmq")
 require File.join(Rocketmq::LIBPATH, "rocketmq-client-ruby", "client/message")
 require File.join(Rocketmq::LIBPATH, "rocketmq-client-ruby", "client/producer")
+require File.join(Rocketmq::LIBPATH, "rocketmq-client-ruby", "client/push_consumer")
+require File.join(Rocketmq::LIBPATH, "rocketmq-client-ruby", "client/received_message")

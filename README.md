@@ -59,6 +59,41 @@ $ gem install rocketmq-client-ruby
 
 ## Usage
 
+### Producer
+```ruby
+require 'rocketmq-client-ruby'
+producer = Client::Producer.new('PID-XXX')
+producer.set_name_server_address('0.0.0.0:9876')
+producer.start()
+
+msg = Client::Message.new('YOUR-TOPIC')
+msg.set_keys('key')
+msg.set_tags('tag')
+msg.set_body('hello, world')
+ret = producer.send_sync(msg)
+producer.shutdown()
+```
+### PushConsumer
+```ruby
+require 'rocketmq-client-ruby'
+consumer = Client::PushConsumer.new('CID-XXX')
+consumer.set_name_server_address('0.0.0.0:9876')
+callback = -> (msg) {
+    puts "received #{msg.id} #{msg.body}"
+    return Rocketmq::C::ConsumeStatus[:consume_success]
+}
+consumer.subscribe('YOUR-TOPIC', callback)
+consumer.start()
+
+while true
+ sleep(60)
+end
+
+consumer.shutdown()
+```
+### Demo
+![demo](assets/demo.png "Demo")
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at <https://github.com/edmondfrank/rocketmq-client-ruby>. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Community Guidelines](https://docs.chef.io/community_guidelines.html) code of conduct.
