@@ -51,8 +51,18 @@ module Rocketmq
     attach_function :SetByteMessageBody, [:pointer, :string, :int], Status
     attach_function :SetMessageProperty, [:pointer, :string, :string], Status
     attach_function :CreateProducer, [:string], :pointer
+    attach_function :CreateOrderlyProducer, [:string], :pointer
+    attach_function :SetProducerNameServerDomain, [:pointer, :string], Status
     attach_function :SetProducerNameServerAddress, [:pointer, :string], Status
+    attach_function :SetProducerSendMsgTimeout, [:pointer, :int], Status
+    attach_function :SetProducerCompressLevel, [:pointer, :int], Status
+    attach_function :SetProducerMaxMessageSize, [:pointer, :int], Status
+    attach_function :SetProducerGroupName, [:pointer, :string], Status
+    attach_function :SetProducerInstanceName, [:pointer, :string], Status
+    attach_function :SetProducerSessionCredentials, [:pointer, :string, :string, :string], Status
     attach_function :SendMessageSync, [:pointer, :pointer, :pointer], Status
+    attach_function :SendMessageOneway, [:pointer, :pointer, :pointer], Status
+    attach_function :SendMessageOrderlyByShardingKey, [:pointer, :pointer, :string, :pointer], Status
     attach_function :StartProducer, [:pointer], Status
     attach_function :ShutdownProducer, [:pointer], Status
     attach_function :CreatePushConsumer, [:string], :pointer
