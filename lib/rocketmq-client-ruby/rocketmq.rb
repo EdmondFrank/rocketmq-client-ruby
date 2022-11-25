@@ -72,13 +72,18 @@ module Rocketmq
 
     callback :msg_consume_callback, %i[pointer pointer], :int
 
+    # Message
     attach_function :CreateMessage, [:string], :pointer
     attach_function :DestroyMessage, [:pointer], Status
     attach_function :SetMessageKeys, %i[pointer string], Status
     attach_function :SetMessageTags, %i[pointer string], Status
     attach_function :SetMessageBody, %i[pointer string], Status
     attach_function :SetByteMessageBody, %i[pointer string int], Status
+    attach_function :GetMessageProperty, %i[pointer string], :string
     attach_function :SetMessageProperty, %i[pointer string string], Status
+    attach_function :SetDelayTimeLevel, %i[pointer int], Status
+
+    # Producer
     attach_function :CreateProducer, [:string], :pointer
     attach_function :CreateOrderlyProducer, [:string], :pointer
     attach_function :SetProducerNameServerDomain, %i[pointer string], Status

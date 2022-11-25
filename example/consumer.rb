@@ -21,7 +21,7 @@ require 'rocketmq-client-ruby'
 consumer = Client::PushConsumer.new('CID-XXX')
 consumer.set_name_server_address('0.0.0.0:9876')
 callback = -> (msg) {
-  puts "received #{msg.id} #{msg.body}"
+  puts "received #{msg.id} #{msg.body} #{msg['client']}"
   return Rocketmq::C::ConsumeStatus[:consume_success]
 }
 consumer.subscribe('YOUR-TOPIC', callback)

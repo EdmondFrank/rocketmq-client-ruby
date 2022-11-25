@@ -26,6 +26,7 @@ msg = Client::Message.new('YOUR-TOPIC')
 msg.set_keys('key')
 msg.set_tags('tag')
 msg.set_body('hello, world')
+msg['client'] = 'ruby'
 ret = producer.send_sync(msg)
 puts(ret)
 ret = producer.send_sync(msg)
