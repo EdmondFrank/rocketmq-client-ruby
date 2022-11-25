@@ -34,6 +34,12 @@ module Rocketmq
       :clustering, 1
     )
 
+    TransactionStatus = enum(
+      :commit, 0,
+      :rollback, 1,
+      :unknown, 2
+    )
+
     ConsumeStatus = enum(
       :consume_success, 0,
       :reconsume_later, 1
@@ -71,6 +77,8 @@ module Rocketmq
     end
 
     callback :msg_consume_callback, %i[pointer pointer], :int
+    callback :transaction_check_callback, %i[pointer pointer pointer], :int
+    callback :local_transaction_execute_callback, %i[pointer pointer pointer], :int
 
     # Message
     attach_function :CreateMessage, [:string], :pointer
@@ -83,6 +91,9 @@ module Rocketmq
     attach_function :SetMessageProperty, %i[pointer string string], Status
     attach_function :SetDelayTimeLevel, %i[pointer int], Status
 
+    # TransactionMQProducer
+    attach_function :CreateTransactionProducer, %i[string transaction_check_callback pointer], :pointer
+    attach_function :SendMessageTransaction, %i[pointer pointer local_transaction_execute_callback pointer pointer], :int
     # Producer
     attach_function :CreateProducer, [:string], :pointer
     attach_function :CreateOrderlyProducer, [:string], :pointer

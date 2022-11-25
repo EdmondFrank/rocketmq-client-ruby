@@ -5,7 +5,7 @@ module Client
   class Producer
     include Rocketmq::C
 
-    def initialize(group_id, orderly: false, timeout: nil, compass_level: nil, max_message_size: nil)
+    def initialize(group_id, orderly: false, timeout: nil, compress_level: nil, max_message_size: nil)
       producer_factory =
         if orderly
           :CreateOrderlyProducer
@@ -18,12 +18,12 @@ module Client
       raise StandardError.new('Returned null pointer when create Producer') unless @producer
 
       set_timeout(timeout) if timeout.to_i.positive?
-      set_compress_level(compass_level) if compass_level
+      set_compress_level(compress_level) if compress_level
       set_max_message_size(max_message_size) if max_message_size.to_i.positive?
     end
 
-    def set_compress_level(compass_level)
-      SetProducerCompressLevel(@producer, compass_level)
+    def set_compress_level(compress_level)
+      SetProducerCompressLevel(@producer, compress_level)
     end
 
     def set_max_message_size(max_message_size)
