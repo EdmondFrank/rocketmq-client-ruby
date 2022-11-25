@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 module Client
+  # PushConsumer
   class PushConsumer
     include Rocketmq::C
 
-    def initialize(group_id, orderly=false, message_model=MessageModel[:clustering])
+    def initialize(group_id, orderly: false, message_model: MessageModel[:clustering])
       @orderly = orderly
       @push_consumer = CreatePushConsumer(group_id)
       @callback_refs = []
@@ -18,10 +21,9 @@ module Client
       SetPushConsumerNameServerAddress(@push_consumer, addr)
     end
 
-    def subscribe(topic, callback, expression='*')
+    def subscribe(topic, callback, expression: '*')
       on_message =
-        FFI::Function.new(:int, [:pointer, :pointer]) do |consumer, msg|
-
+        FFI::Function.new(:int, %i[pointer pointer]) do |_, msg|
         consume_result = callback.call(ReceivedMessage.new(msg))
         if consume_result != ConsumeStatus[:consume_success] &&
            consume_result != ConsumeStatus[:reconsume_later]

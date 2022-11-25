@@ -1,20 +1,25 @@
+# frozen_string_literal: true
+
 module Client
+  # Producer module
   class Producer
     include Rocketmq::C
 
-    def initialize(group_id, orderly=false, timeout=nil, compass_level=nil, max_message_size=nil)
+    def initialize(group_id, orderly: false, timeout: nil, compass_level: nil, max_message_size: nil)
       producer_factory =
-        orderly ?
-          :CreateOrderlyProducer :
+        if orderly
+          :CreateOrderlyProducer
+        else
           :CreateProducer
+        end
 
       @producer = send(producer_factory, group_id)
       @callback_refs = []
       raise StandardError.new('Returned null pointer when create Producer') unless @producer
 
-      set_timeout(timeout) if timeout.to_i > 0
+      set_timeout(timeout) if timeout.to_i.positive?
       set_compress_level(compass_level) if compass_level
-      set_max_message_size(max_message_size) if max_message_size.to_i > 0
+      set_max_message_size(max_message_size) if max_message_size.to_i.positive?
     end
 
     def set_compress_level(compass_level)

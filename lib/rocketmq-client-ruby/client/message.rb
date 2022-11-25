@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module Client
+  # Message module
   class Message
     include Rocketmq::C
 
