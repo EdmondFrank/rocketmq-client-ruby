@@ -8,7 +8,7 @@ module Rocketmq
     def self.attach_function_maybe(*args)
       attach_function(*args)
     rescue FFI::NotFoundError
-      next
+      puts("Missing function: #{args[0]} detail: #{args}")
     end
 
     extend FFI::Library
@@ -94,13 +94,27 @@ module Rocketmq
     attach_function :SendMessageOrderlyByShardingKey, %i[pointer pointer string pointer], Status
     attach_function :StartProducer, [:pointer], Status
     attach_function :ShutdownProducer, [:pointer], Status
+
+    # PushConsumer
     attach_function :CreatePushConsumer, [:string], :pointer
     attach_function :SetPushConsumerMessageModel, [:pointer, MessageModel], Status
     attach_function :StartPushConsumer, [:pointer], Status
     attach_function :ShutdownPushConsumer, [:pointer], Status
+    attach_function :SetPushConsumerThreadCount, %i[pointer int], Status
+    attach_function :SetPushConsumerMessageBatchMaxSize, %i[pointer int], Status
+    attach_function :SetPushConsumerInstanceName, %i[pointer string], Status
     attach_function :SetPushConsumerNameServerAddress, %i[pointer string], Status
+    attach_function :SetPushConsumerNameServerDomain, %i[pointer string], Status
+    attach_function :GetPushConsumerGroupID, [:pointer], :string
+    attach_function :SetPushConsumerGroupID, %i[pointer string], Status
+    attach_function :SetPushConsumerSessionCredentials, %i[pointer string string string], Status
     attach_function :RegisterMessageCallback, %i[pointer msg_consume_callback], Status
     attach_function :RegisterMessageCallbackOrderly, %i[pointer msg_consume_callback], Status
+    attach_function :UnregisterMessageCallback, [:pointer], Status
+    attach_function :UnregisterMessageCallbackOrderly, [:pointer], Status
+    attach_function :Subscribe, %i[pointer string string], Status
+
+    # ReceivedMessage
     attach_function :GetMessageTopic, [:pointer], :string
     attach_function :GetMessageTags, [:pointer], :string
     attach_function :GetMessageKeys, [:pointer], :string
@@ -111,12 +125,10 @@ module Rocketmq
     attach_function :GetMessageReconsumeTimes, [:pointer], :int
     attach_function :GetMessageStoreSize, [:pointer], :int
     attach_function :GetMessageBornTimestamp, [:pointer], :long_long
-    attach_function :GetMessageStoreTimestapm, [:pointer], :long_long
+    attach_function :GetMessageStoreTimestamp, [:pointer], :long_long
     attach_function :GetMessageQueueOffset, [:pointer], :long_long
     attach_function :GetMessageCommitLogOffset, [:pointer], :long_long
     attach_function :GetMessagePreparedTransactionOffset, [:pointer], :long_long
     attach_function :GetMessageProperty, %i[pointer string], :string
-
-    attach_function :Subscribe, %i[pointer string string], Status
   end
 end
