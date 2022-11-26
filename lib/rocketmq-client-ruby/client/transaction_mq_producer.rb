@@ -69,7 +69,7 @@ module Client
       ensure
         @callback_refs.delete(on_local_exec)
       end
-      c_result
+      Reponse.new(c_result)
     end
   end
 end

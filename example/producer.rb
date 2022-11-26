@@ -42,7 +42,7 @@ def send_sync_message(count)
   count.times do
     msg = create_message('sync_message')
     ret = producer.send_sync(msg)
-    puts("send message status: #{ret[:send_status]}  msgId: #{ret[:msg_id]}")
+    puts("send message status: #{ret.status}  msgId: #{ret.msg_id}")
   end
   puts('send sync message done')
   producer.shutdown
@@ -56,7 +56,7 @@ def send_orderly_with_sharding_key(count)
   count.times do
     msg = create_message('orderly message')
     ret = producer.send_orderly_with_sharding_key(msg, 'orderId')
-    puts("send message status: #{ret[:send_status]} msgId: #{ret[:msg_id]}")
+    puts("send message status: #{ret.status} msgId: #{ret.msg_id}")
   end
   puts('send orderly message done')
   producer.shutdown
@@ -76,8 +76,8 @@ def send_message_multi_thread(retry_time)
   end
   retry_time.times do
     ret = $queue.pop() # Blocks until thread 't' pushes onto the queue
-    if ret[:send_status]
-      puts("send message status: #{ret[:send_status]} msgId: #{ret[:msg_id]}")
+    if ret.status
+      puts("send message status: #{ret.status} msgId: #{ret.msg_id}")
     else
       puts('send message to MQ failed.')
     end

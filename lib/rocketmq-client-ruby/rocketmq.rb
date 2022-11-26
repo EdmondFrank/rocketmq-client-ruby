@@ -15,7 +15,9 @@ module Rocketmq
     ffi_lib %w[librocketmq]
 
     Status = enum(
+      # Success
       :ok, 0,
+      # Failed
       :null_pointer, 1,
       :malloc_failed, 2,
       # producer
@@ -24,8 +26,12 @@ module Rocketmq
       :producer_send_oneway_failed, 12,
       :producer_send_orderly_failed, 13,
       :producer_send_async_failed, 14,
+      :producer_send_orderlyasync_failed, 15,
+      :producer_send_transaction_failed, 16,
       # push consumer
       :push_consumer_start_failed, 20,
+
+      :not_suport, 500,
       :not_support_now, -1
     )
 
@@ -38,6 +44,13 @@ module Rocketmq
       :commit, 0,
       :rollback, 1,
       :unknown, 2
+    )
+
+    SendStatus = enum(
+      :send_ok, 0,
+      :send_flush_disk_timeout, 1,
+      :send_flush_slave_timeout, 2,
+      :send_slave_not_available, 3
     )
 
     ConsumeStatus = enum(
@@ -71,9 +84,9 @@ module Rocketmq
     )
 
     class SendResult < FFI::Struct
-      layout :send_status, :int,
+      layout :send_status, SendStatus,
              :msg_id, :char, 256,
-             :offset, :long_long
+             :offset_msg_id, :long_long
     end
 
     callback :msg_consume_callback, %i[pointer pointer], :int
@@ -113,6 +126,7 @@ module Rocketmq
 
     # PushConsumer
     attach_function :CreatePushConsumer, [:string], :pointer
+    attach_function :DestroyPushConsumer, [:pointer], Status
     attach_function :SetPushConsumerMessageModel, [:pointer, MessageModel], Status
     attach_function :StartPushConsumer, [:pointer], Status
     attach_function :ShutdownPushConsumer, [:pointer], Status

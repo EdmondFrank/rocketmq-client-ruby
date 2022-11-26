@@ -49,7 +49,7 @@ module Client
     def send_sync(msg)
       c_result = SendResult.new
       SendMessageSync(@producer, msg.raw, c_result.to_ptr)
-      c_result
+      Response.new(c_result)
     end
 
     def send_oneway(msg)
@@ -59,7 +59,7 @@ module Client
     def send_orderly_with_sharding_key(msg, sharding_key)
       c_result = SendResult.new
       SendMessageOrderlyByShardingKey(@producer, msg.raw, sharding_key, c_result.to_ptr)
-      c_result
+      Response.new(c_result)
     end
 
     def set_group(group_name)
@@ -76,6 +76,10 @@ module Client
 
     def shutdown
       ShutdownProducer(@producer)
+    end
+
+    def destroy
+      DestroyPushConsumer(@producer)
     end
   end
 end
