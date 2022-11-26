@@ -1,7 +1,10 @@
-# rocketmq-client-ruby
+# Rocketmq Client For Ruby
 
 A Ruby FFI binding to [librocketmq](https://github.com/apache/rocketmq-client-cpp).
 
+> **Notice 1:** This client is still in `dev` version. Use it cautiously in production.
+
+> **Notice 2:** This SDK is now only support macOS and Linux and only test on Ubuntu.
 
 ## Prerequisites
 
